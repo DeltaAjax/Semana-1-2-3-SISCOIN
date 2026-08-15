@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Salva a Financín - Control Interno y Auditoría</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+ :root {
+  --bg-dark: #090d16;
+  --card-bg: #151d2f;
+  --card-border: #2c3b59;
+  --yellow: #FACC15;
+  --green: #22c55e;
+  --red: #ef4444;
+  --blue: #38bdf8;
+  --purple: #a855f7;
+  --burgundy: #800020;
+  --text-light: #f8fafc;
+  --text-muted: #94a3b8;
+ }
+ *, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+ }
+ body {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 14px;
+  line-height: 1.4;
+  overflow-x: hidden;
+ }
+ .app-container {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 30px;
+ }
+ h1, h2, h3, h4, .btn-brutal, .badge-brutal {
+  font-family: 'Archivo Black', sans-serif;
+  letter-spacing: -0.5px;
+ }
+ .top-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+ }
+ .stat-card {
+  background: var(--card-bg);
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0px #000;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+ }
+ .stat-val {
+  font-size: 15px;
+  font-weight: 800;
+ }
+ .mission-box {
+  background: #0f766e;
+  border: 3px solid #000;
+  box-shadow: 6px 6px 0px #000;
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  position: relative;
+  transition: background 0.4s ease;
+ }
+ .mission-box.danger-1 {
+  background: #991b1b !important;
+  animation: pulseDanger 1.4s infinite;
+ }
+ .mission-box.danger-2 {
+  background: #b45309 !important;
+ }
+ @keyframes pulseDanger {
+  0%, 100% { box-shadow: 6px 6px 0px #000; }
+  50% { box-shadow: 8px 8px 0px #000, 0 0 24px rgba(239, 68, 68, 0.75); }
+ }
+ .stage-arena {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0 6px 0;
+ }
+ .avatar-wrap {
+  width: 105px;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+ }
+ .floating {
+  animation: floaty 2.6s ease-in-out infinite;
+ }
+ @keyframes floaty {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+ }
+ .tremble-anim {
+  animation: tremble 0.3s infinite ease-in-out;
+ }
+ @keyframes tremble {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-3px, 2px) rotate(-2deg); }
+  40% { transform: translate(3px, -2px) rotate(2deg); }
+  60% { transform: translate(-3px, -1px) rotate(-1deg); }
+  80% { transform: translate(3px, 1px) rotate(1.5deg); }
+ }
+ @keyframes blinkEyes {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+ }
+ .svg-eye {
+  transform-origin: center;
+  animation: blinkEyes 3.5s infinite;
+ }
+ @keyframes tearDrop {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(18px); opacity: 0; }
+ }
+ .svg-tear {
+  animation: tearDrop 1.2s infinite ease-in;
+ }
+ @keyframes monsterChomp {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05) rotate(2deg); }
+ }
+ .monster-anim {
+  animation: monsterChomp 2.2s infinite ease-in-out;
+ }
+ .chase-container {
+  background: repeating-linear-gradient(45deg, #111827, #111827 10px, #030712 10px, #030712 20px);
+  border: 3px solid #000;
+  border-radius: 999px;
+  height: 44px;
+  position: relative;
+  margin: 10px 0 6px 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
+ }
+ .chase-actor {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ }
+ .speech-bubble {
+  position: relative;
+  background: #020617;
+  color: #f8fafc;
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0px #000;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: -6px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+ }
+ .speech-bubble::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: -12px;
+  border-width: 0 10px 12px 10px;
+  border-style: solid;
+  border-color: transparent transparent #000 transparent;
+ }
+ .speech-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  display: block;
+  margin-bottom: 2px;
+ }
+ .game-card {
+  background: #ffffff;
+  color: #0f172a;
+  border: 3px solid #000;
+  box-shadow: 6px 6px 0px #000;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: popIn 0.3s ease-out;
+ }
+ @keyframes popIn {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+ }
+ .badge-brutal {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 11px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0px #000;
+  width: fit-content;
+  text-transform: uppercase;
+ }
+ .badge-yellow { background: var(--yellow); color: #000; }
+ .badge-red { background: #f87171; color: #000; }
+ .badge-blue { background: var(--blue); color: #000; }
+ .badge-green { background: #4ade80; color: #000; }
+ .badge-purple { background: var(--purple); color: #fff; }
+ .question-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+ }
+ .options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+ }
+ @media(min-width: 520px) {
+  .options-grid {
+   grid-template-columns: 1fr 1fr;
+  }
+ }
+ .btn-option {
+  background: #f8fafc;
+  color: #0f172a;
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0px #000;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+ }
+ .btn-option:hover:not(:disabled) {
+  background: #e0f2fe;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000;
+ }
+ .btn-option:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px #000;
+ }
+ .btn-option:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #cbd5e1;
+  box-shadow: 2px 2px 0px #000;
+ }
+ .powerups-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+ }
+ .btn-pwr {
+  background: #ede9fe;
+  color: #0f172a;
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0px #000;
+  border-radius: 6px;
+  padding: 8px 6px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.08s, box-shadow 0.08s;
+ }
+ .btn-pwr:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #e2e8f0;
+ }
+ .btn-pwr:hover:not(:disabled) {
+  background: #ddd6fe;
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #000;
+ }
+ .feedback-box {
+  background: #f1f5f9;
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0px #000;
+  border-radius: 8px;
+  padding: 14px;
+  color: #0f172a;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+ }
+ .btn-action {
+  background: var(--yellow);
+  color: #000;
+  border: 3px solid #000;
+  box-shadow: 5px 5px 0px #000;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  transition: transform 0.08s, box-shadow 0.08s;
+ }
+ .btn-action:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0px #000;
+ }
+ .btn-action:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0px 0px 0px #000;
+ }
+ .bar-container {
+  background: #334155;
+  border: 2px solid #000;
+  border-radius: 999px;
+  height: 16px;
+  overflow: hidden;
+  margin-top: 4px;
+ }
+ .bar-fill {
+  height: 100%;
+  background: var(--green);
+  transition: width 0.4s ease-out;
+ }
+ .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+ }
+ .modal-overlay.active {
+  display: flex;
+ }
+ .modal-card {
+  background: #ffffff;
+  color: #0f172a;
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0px #000;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 90vh;
+  overflow-y: auto;
+ }
+ .shop-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+ }
+ .shop-row {
+  background: #ede9fe;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+ }
+ .toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #020617;
+  color: var(--yellow);
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0px #000;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  z-index: 2000;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center;
+ }
+ .toast.show {
+  transform: translateX(-50%) translateY(0px);
+ }
+ .event-banner {
+  background: #fef08a;
+  border: 2px dashed #000;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #713f12;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+ }
+</style>
+</head>
+<body>
+<div class="app-container">
+ <!-- Header de Estadísticas -->
+ <div class="top-stats">
+  <div class="stat-card">
+   <div style="width: 38px; height: 38px;" id="evo-badge-svg"></div>
+   <div style="text-align: right;">
+    <div style="font-size: 10px; color: var(--text-muted); font-weight: bold;">RANGO AUDITOR</div>
+    <div class="stat-val" id="evo-name" style="color: var(--yellow);">Huevo Contable</div>
+   </div>
+  </div>
+  <div class="stat-card">
+   <button class="btn-action" style="padding: 6px 12px; font-size: 13px; width: auto;" onclick="abrirTienda()">Tienda & Vestidor</button>
+   <div style="text-align: right;">
+    <div style="font-size: 10px; color: var(--text-muted); font-weight: bold;">FONDOS</div>
+    <div class="stat-val" style="color: #4ade80;"><span id="coins-count">10</span> pts</div>
+   </div>
+  </div>
+ </div>
+
+ <!-- Barra de XP -->
+ <div style="background: var(--card-bg); border: 2px solid #000; border-radius: 8px; padding: 8px 12px; box-shadow: 3px 3px 0px #000;">
+  <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800;">
+   <span>EXPERIENCIA: <span id="xp-text">0 / 150</span> XP</span>
+   <span id="streak-badge" style="color: #f87171;"></span>
+  </div>
+  <div class="bar-container">
+   <div class="bar-fill" id="xp-bar" style="width: 0%; background: var(--blue);"></div>
+  </div>
+ </div>
+
+ <!-- Status Box de Combate Ilustrado -->
+ <div class="mission-box" id="mission-box">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+   <span class="badge-brutal badge-yellow" id="mission-title">EVALUACIÓN DE CONTROL</span>
+   <span class="badge-brutal badge-red" id="villain-tag">Riesgo Inherente</span>
+  </div>
+
+  <!-- Escenario Ilustrado (SVGs) -->
+  <div class="stage-arena">
+   <div class="avatar-wrap floating" id="financin-avatar"></div>
+   <div style="font-size: 26px; font-weight: 900; color: #facc15; text-shadow: 2px 2px #000;">VS</div>
+   <div class="avatar-wrap monster-anim" id="villain-avatar"></div>
+  </div>
+
+  <!-- Pista de persecución -->
+  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9;">
+   Brecha de Control Interno
+  </div>
+  <div class="chase-container">
+   <div class="chase-actor" id="chase-villain" style="left: 6%; width: 32px; height: 32px;"></div>
+   <div class="chase-actor" id="chase-financin" style="left: 84%; width: 32px; height: 32px;"></div>
+  </div>
+
+  <!-- Barra de Salud y Progreso (5 CASOS POR RONDA) -->
+  <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; margin-top: 8px;">
+   <span>CONTROLES: <span id="health-hearts">♥♥♥</span></span>
+   <span>CASO: <span id="progress-text">1/5</span></span>
+  </div>
+ </div>
+
+ <!-- Diálogo Emocional Dinámico -->
+ <div class="speech-bubble">
+  <span class="speech-label">Financín reflexiona:</span>
+  <span id="speech-text">“¡Revisando papeles de trabajo! Hoy blindamos la empresa.”</span>
+ </div>
+
+ <!-- Contenedor Principal Dinámico -->
+ <div id="main-content"></div>
+</div>
+
+<!-- MODAL TIENDA DE POWER-UPS Y VESTIDOR COSMÉTICO -->
+<div class="modal-overlay" id="shop-modal">
+ <div class="modal-card">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+   <h3 style="margin: 0;">Tienda y Vestidor</h3>
+   <button onclick="cerrarTienda()" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer;">✕</button>
+  </div>
+
+  <div style="display: flex; gap: 8px; border-bottom: 2px solid #000; padding-bottom: 8px;">
+   <button id="tab-btn-pwr" class="badge-brutal badge-yellow" style="cursor:pointer;" onclick="setShopTab('pwr')">Herramientas</button>
+   <button id="tab-btn-cosm" class="badge-brutal badge-blue" style="cursor:pointer;" onclick="setShopTab('cosm')">Cosméticos SVG</button>
+  </div>
+
+  <div id="shop-tab-pwr" class="shop-grid">
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Comodín 50/50</div>
+     <div style="font-size: 11px; color: #475569;">Descarta 2 opciones de control incorrectas. (Tienes: <b id="inv-5050">0</b>)</div>
+    </div>
+    <button class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="comprarItem('5050', 8)">8 pts</button>
+   </div>
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Escudo de Salvaguarda</div>
+     <div style="font-size: 11px; color: #475569;">Mitiga 1 hallazgo sin perder control/vida. (Tienes: <b id="inv-escudo">0</b>)</div>
+    </div>
+    <button class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="comprarItem('escudo', 14)">14 pts</button>
+   </div>
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Pista Técnica IIA</div>
+     <div style="font-size: 11px; color: #475569;">Consulta criterio normativo directo. (Tienes: <b id="inv-pista">0</b>)</div>
+    </div>
+    <button class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="comprarItem('pista', 6)">6 pts</button>
+   </div>
+  </div>
+
+  <div id="shop-tab-cosm" class="shop-grid" style="display:none;">
+   <!-- Monóculo -->
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Monóculo de Auditoría</div>
+     <div style="font-size: 11px; color: #475569;">Lente dorado vectorial de inspección detallada.</div>
+    </div>
+    <button id="btn-cosm-monoculo" class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="gestionarCosmetico('monoculo', 25)">25 pts</button>
+   </div>
+   <!-- Visera de Contador -->
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Visera Verde de Contador</div>
+     <div style="font-size: 11px; color: #475569;">Visera clásica esmeralda de análisis contable.</div>
+    </div>
+    <button id="btn-cosm-visera" class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="gestionarCosmetico('visera', 40)">40 pts</button>
+   </div>
+   <!-- Gafas VIP -->
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Gafas Oscuras "Auditor VIP"</div>
+     <div style="font-size: 11px; color: #475569;">Montura angular de juicio inquebrantable.</div>
+    </div>
+    <button id="btn-cosm-gafas" class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="gestionarCosmetico('gafas', 60)">60 pts</button>
+   </div>
+   <!-- Traje Burgundy FACPYA -->
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Traje Ejecutivo Burgundy</div>
+     <div style="font-size: 11px; color: #475569;">Saco vino institucional con corbata dorada.</div>
+    </div>
+    <button id="btn-cosm-traje" class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="gestionarCosmetico('traje', 90)">90 pts</button>
+   </div>
+   <!-- Capa Dorada -->
+   <div class="shop-row">
+    <div>
+     <div style="font-weight: 800; font-size: 13px;">Capa Dorada de Control</div>
+     <div style="font-size: 11px; color: #475569;">Capa protectora contra riesgos residuales.</div>
+    </div>
+    <button id="btn-cosm-capa" class="btn-action" style="padding: 6px 10px; font-size: 12px; width: auto;" onclick="gestionarCosmetico('capa', 130)">130 pts</button>
+   </div>
+  </div>
+
+  <button class="btn-action" style="margin-top: 10px;" onclick="cerrarTienda()">Volver al Juego</button>
+ </div>
+</div>
+<div class="toast" id="toast-msg">Mensaje</div>
+
+<script>
+// =============================================================================
+// BANCO DE 36 PREGUNTAS (12 POR SEMANA: OPCIÓN MÚLTIPLE, COMPLETAR, V/F)
+// =============================================================================
+const BANCO_PREGUNTAS = [
+ // SEMANA 1: NORMAS GLOBALES, IIA MÉXICO Y ÉTICA
+ { id: 1, cat: "fraude", tipo: "Opción Múltiple", pregunta: "¿Cuál es el organismo profesional en México que representa y promueve las Normas Globales de Auditoría Interna del IIA?", opciones: ["IIA México", "IMAI", "SAT", "CINIF"], correcta: "IIA México", retro: "IIA México es la denominación oficial actual del capítulo representativo del Institute of Internal Auditors (reemplazando al antiguo término IMAI)." },
+ { id: 2, cat: "fraude", tipo: "Completar la frase", pregunta: "El principio ético de ______ exige que el auditor interno no comprometa su juicio profesional por sesgos, conflictos de interés o influencias indebidas.", opciones: ["Objetividad", "Integridad", "Confidencialidad", "Competencia"], correcta: "Objetividad", retro: "La Objetividad asegura que los juicios y evaluaciones de auditoría no se vean afectados por presiones o intereses de terceros." },
+ { id: 3, cat: "fraude", tipo: "Falso o Verdadero", pregunta: "La independencia en apariencia implica evitar situaciones que hagan que un tercero informado concluya que la integridad del auditor ha sido comprometida.", opciones: ["Verdadero", "Falso"], correcta: "Verdadero", retro: "Verdadero. La independencia debe mantenerse tanto de forma mental como en apariencia ante terceros." },
+ { id: 4, cat: "fraude", tipo: "Opción Múltiple", pregunta: "Si un auditor interno acepta auditar un departamento que él mismo dirigió hace apenas 3 meses, se presenta una amenaza de:", opciones: ["Autorrevisión", "Interés propio", "Abogacía", "Familiaridad"], correcta: "Autorrevisión", retro: "La amenaza de autorrevisión ocurre cuando el auditor evalúa decisiones o trabajos realizados previamente por él mismo." },
+ { id: 5, cat: "fraude", tipo: "Falso o Verdadero", pregunta: "El nombre institucional y vigente para el instituto representativo en México de auditoría interna sigue siendo IMAI.", opciones: ["Falso", "Verdadero"], correcta: "Falso", retro: "Falso. La institución ha transitado formalmente a llamarse IIA México; referirse a ella con las siglas anteriores es incorrecto." },
+ { id: 6, cat: "fraude", tipo: "Completar la frase", pregunta: "Las medidas implementadas por las organizaciones y los auditores para neutralizar o reducir las amenazas a niveles aceptables se conocen como ______.", opciones: ["Salvaguardas", "Dictámenes", "Modelos estáticos", "Pólizas"], correcta: "Salvaguardas", retro: "Las salvaguardas son controles, políticas o procedimientos diseñados para mitigar amenazas a la independencia y ética." },
+ { id: 7, cat: "fraude", tipo: "Opción Múltiple", pregunta: "Un auditor interno recibe obsequios valiosos del proveedor clave al que está evaluando en compras. ¿Qué tipo de amenaza ética se detona?", opciones: ["Interés propio", "Intimidación", "Consistencia", "Provisionalidad"], correcta: "Interés propio", retro: "Los beneficios económicos u obsequios comprometen el juicio objetivo debido a la amenaza de interés propio." },
+ { id: 8, cat: "fraude", tipo: "Falso o Verdadero", pregunta: "El principio de Confidencialidad permite a los auditores revelar datos reservados de la empresa a sus amistades siempre que sea de forma verbal.", opciones: ["Falso", "Verdadero"], correcta: "Falso", retro: "Falso. La confidencialidad prohíbe revelar información confidencial obtenida en el ejercicio profesional sin autorización expresa." },
+ { id: 9, cat: "fraude", tipo: "Opción Múltiple", pregunta: "¿Cuántos Dominios integran la estructura de las Normas Globales de Auditoría Interna (Global Internal Audit Standards 2024)?", opciones: ["5 Dominios", "3 Dominios", "8 Dominios", "10 Dominios"], correcta: "5 Dominios", retro: "Las Normas Globales de Auditoría Interna 2024 están estructuradas de manera jerárquica en 5 dominios fundamentales." },
+ { id: 10, cat: "fraude", tipo: "Completar la frase", pregunta: "El estado mental que permite expresar una conclusión sin estar afectado por influencias que comprometan el juicio profesional es la independencia ______.", opciones: ["Mental", "En apariencia", "Operativa", "Estructural"], correcta: "Mental", retro: "La independencia mental es la libertad de criterio interna del auditor para emitir juicios con total objetividad e integridad." },
+ { id: 11, cat: "fraude", tipo: "Opción Múltiple", pregunta: "¿Qué dominio de las Normas Globales de Auditoría Interna establece la 'Ética y Profesionalismo' exigidos a los auditores?", opciones: ["Dominio II", "Dominio I", "Dominio IV", "Dominio V"], correcta: "Dominio II", retro: "El Dominio II de las Normas Globales 2024 se titula 'Ética y profesionalismo' y concentra los principios de conducta obligatorios." },
+ { id: 12, cat: "fraude", tipo: "Falso o Verdadero", pregunta: "La amenaza de intimidación ocurre cuando el auditor se ve disuadido de actuar con objetividad debido a presiones o amenazas de la administración.", opciones: ["Verdadero", "Falso"], correcta: "Verdadero", retro: "Verdadero. Las amenazas de despido, degradación o represalias constituyen una amenaza directa de intimidación." },
+
+ // SEMANA 2: TEORÍA DEL RIESGO Y MARCO MIARE
+ { id: 13, cat: "bancarrota", tipo: "Opción Múltiple", pregunta: "Según Santillana González, el riesgo propio e intrínseco de una actividad o proceso antes de considerar cualquier control interno se llama:", opciones: ["Riesgo Inherente", "Riesgo de Control", "Riesgo Residual", "Riesgo de Detección"], correcta: "Riesgo Inherente", retro: "El Riesgo Inherente es la susceptibilidad al error o pérdida sin la intervención de medidas de mitigación o controles." },
+ { id: 14, cat: "bancarrota", tipo: "Completar la frase", pregunta: "El riesgo que subsiste y permanece en la entidad aún después de haber aplicado los controles y medidas de mitigación es el riesgo ______.", opciones: ["Residual", "Inherente", "De auditoría", "Previsible"], correcta: "Residual", retro: "El Riesgo Residual es el nivel de exposición remanente tras la implementación efectiva de los controles internos." },
+ { id: 15, cat: "bancarrota", tipo: "Falso o Verdadero", pregunta: "El riesgo de control es la probabilidad de que los procedimientos sustantivos del auditor no detecten una incorrección material existente.", opciones: ["Falso", "Verdadero"], correcta: "Falso", retro: "Falso. Ese es el riesgo de detección. El riesgo de control es que el sistema de control interno de la entidad no prevenga ni detecte el error oportunamente." },
+ { id: 16, cat: "bancarrota", tipo: "Opción Múltiple", pregunta: "¿Qué significa la sigla MIARE en el marco de control y administración de riesgos?", opciones: ["Marco Integral de Administración de Riesgos Empresariales", "Modelo Institucional de Auditoría y Rendición Económica", "Matriz Integrada para la Aplicación de Riesgos Estandarizados", "Manual Interno de Auditoría y Riesgos Estatales"], correcta: "Marco Integral de Administración de Riesgos Empresariales", retro: "MIARE es la denominación en español equivalente al marco Enterprise Risk Management (ERM - COSO)." },
+ { id: 17, cat: "bancarrota", tipo: "Completar la frase", pregunta: "La cantidad y tipo de riesgo que una organización está dispuesta a aceptar en la búsqueda de sus objetivos estratégicos se denomina ______ al riesgo.", opciones: ["Apetito", "Aversión", "Tolerancia nula", "Auditoría"], correcta: "Apetito", retro: "El apetito al riesgo representa el nivel de exposición global que la junta directiva y la alta dirección deciden asumir." },
+ { id: 18, cat: "bancarrota", tipo: "Opción Múltiple", pregunta: "Cuando una empresa decide contratar una póliza de seguro contra incendios o inundaciones para sus almacenes, está aplicando la respuesta de:", opciones: ["Transferir o compartir el riesgo", "Evitar el riesgo", "Aceptar el riesgo", "Reducir el riesgo"], correcta: "Transferir o compartir el riesgo", retro: "La contratación de seguros o tercerizaciones traslada el impacto financiero del riesgo a una entidad tercera." },
+ { id: 19, cat: "bancarrota", tipo: "Falso o Verdadero", pregunta: "El riesgo financiero abarca la volatilidad en variables como tasas de interés, tipo de cambio, liquidez y riesgo crediticio de contrapartes.", opciones: ["Verdadero", "Falso"], correcta: "Verdadero", retro: "Verdadero. Los riesgos financieros corresponden a fluctuaciones monetarias, de mercado, crédito y liquidez." },
+ { id: 20, cat: "bancarrota", tipo: "Opción Múltiple", pregunta: "Según Santillana, los riesgos que pueden anticiparse mediante planeación, registros históricos o análisis de tendencias se clasifican como:", opciones: ["Riesgos previsibles", "Riesgos imprevisibles", "Riesgos fortuitos", "Riesgos catastróficos"], correcta: "Riesgos previsibles", retro: "Los riesgos previsibles son aquellos identificables con anticipación para los cuales se pueden diseñar controles específicos." },
+ { id: 21, cat: "bancarrota", tipo: "Completar la frase", pregunta: "El riesgo ______ se origina por fallas en procesos internos, sistemas de información, errores humanos o eventos externos que afectan la operación diaria.", opciones: ["Operativo", "De mercado", "Soberano", "Cambiario"], correcta: "Operativo", retro: "El riesgo operativo comprende las fallas en el flujo transaccional cotidiano, personal, tecnología e infraestructura." },
+ { id: 22, cat: "bancarrota", tipo: "Falso o Verdadero", pregunta: "La respuesta al riesgo de 'Evitar' consiste en cesar completamente las actividades o líneas de negocio que generan la amenaza.", opciones: ["Verdadero", "Falso"], correcta: "Verdadero", retro: "Verdadero. Evitar el riesgo implica cancelar el producto, servicio o inversión que detona la exposición." },
+ { id: 23, cat: "bancarrota", tipo: "Opción Múltiple", pregunta: "En la fórmula del riesgo de auditoría, ¿cuáles son los dos componentes que conforman el Riesgo de Incorrección Material (RIM)?", opciones: ["Riesgo Inherente y Riesgo de Control", "Riesgo de Control y Riesgo de Detección", "Riesgo Residual y Riesgo Financiero", "Riesgo Operativo y Riesgo Legal"], correcta: "Riesgo Inherente y Riesgo de Control", retro: "El RIM combina el riesgo propio de la transacción (inherente) con la posibilidad de que los controles no lo contengan (control)." },
+ { id: 24, cat: "bancarrota", tipo: "Completar la frase", pregunta: "La desviación máxima aceptable respecto al apetito al riesgo fijado por la organización se conoce como ______ al riesgo.", opciones: ["Tolerancia", "Eliminación", "Duplicación", "Incertidumbre"], correcta: "Tolerancia", retro: "La tolerancia al riesgo define el rango operativo específico de variación admisible para el logro de un objetivo." },
+
+ // SEMANA 3: TÉCNICAS Y HERRAMIENTAS DE IDENTIFICACIÓN Y VALUACIÓN
+ { id: 25, cat: "iliquidez", tipo: "Opción Múltiple", pregunta: "Herramienta visual bidimensional que posiciona los riesgos combinando su escala de 'Probabilidad de Ocurrencia' e 'Impacto Severo':", opciones: ["Mapa de Riesgos (o Matriz de Calor)", "Diagrama de Ishikawa", "Balanza de Comprobación", "Árbol de Decisión Binario"], correcta: "Mapa de Riesgos (o Matriz de Calor)", retro: "El Mapa de Riesgos grafica la probabilidad frente al impacto para priorizar las amenazas críticas." },
+ { id: 26, cat: "iliquidez", tipo: "Completar la frase", pregunta: "La técnica de identificación de riesgos consistente en una sesión abierta y estructurada para generar ideas multidisciplinarias se llama ______.", opciones: ["Tormenta de ideas (Brainstorming)", "Auditoría forense", "Inventario físico", "Cálculo actuarial"], correcta: "Tormenta de ideas (Brainstorming)", retro: "La lluvia/tormenta de ideas promueve que los líderes de área expresen libremente los factores de riesgo identificados." },
+ { id: 27, cat: "iliquidez", tipo: "Falso o Verdadero", pregunta: "El análisis FODA clasifica a las Debilidades y Amenazas como factores internos originados dentro de la estructura de la empresa.", opciones: ["Falso", "Verdadero"], correcta: "Falso", retro: "Falso. Las Debilidades son internas, pero las Amenazas provienen del entorno externo a la organización." },
+ { id: 28, cat: "iliquidez", tipo: "Opción Múltiple", pregunta: "En una matriz de valoración de riesgos, ¿qué cuadrante requiere acciones de control inmediatas y atención de la alta dirección?", opciones: ["Alta probabilidad y Alto impacto (Zona Roja)", "Baja probabilidad y Bajo impacto (Zona Verde)", "Alta probabilidad y Bajo impacto", "Baja probabilidad y Moderado impacto"], correcta: "Alta probabilidad y Alto impacto (Zona Roja)", retro: "La zona roja (alta probabilidad y severo impacto) concentra los riesgos críticos e intolerables que exigen mitigación urgente." },
+ { id: 29, cat: "iliquidez", tipo: "Completar la frase", pregunta: "La técnica que consiste en diseñar supuestos hipotéticos ('¿Qué pasaría si...?') para proyectar crisis extremas es el análisis de ______.", opciones: ["Escenarios", "Pólizas", "Ratios", "Cuentas T"], correcta: "Escenarios", retro: "El análisis de escenarios evalúa el impacto financiero y operativo ante situaciones adversas simuladas." },
+ { id: 30, cat: "iliquidez", tipo: "Falso o Verdadero", pregunta: "Las entrevistas estructuradas y los cuestionarios de control interno son técnicas cualitativas para la identificación y valuación de riesgos.", opciones: ["Verdadero", "Falso"], correcta: "Verdadero", retro: "Verdadero. Permiten recabar información directa del personal operativo basada en su experiencia y criterio funcional." },
+ { id: 31, cat: "iliquidez", tipo: "Opción Múltiple", pregunta: "La metodología interactiva donde el propio personal operativo examina la efectividad de sus controles bajo facilitación de auditoría es:", opciones: ["Talleres de Autoevaluación y Control (CSA)", "Inspección fiscal externa", "Prueba pericial contable", "Inventario rotativo"], correcta: "Talleres de Autoevaluación y Control (CSA)", retro: "El Control Self-Assessment (CSA) empodera a los colaboradores para diagnosticar y mejorar sus propios controles internos." },
+ { id: 32, cat: "iliquidez", tipo: "Completar la frase", pregunta: "Para una valuación cuantitativa de riesgos se requiere medir las pérdidas potenciales en unidades ______ y estimar porcentajes de probabilidad.", opciones: ["Monetarias", "Subjetivas", "Narrativas", "Abstractas"], correcta: "Monetarias", retro: "El enfoque cuantitativo traduce el impacto a términos monetarios ($) y probabilidades matemáticas numéricas." },
+ { id: 33, cat: "iliquidez", tipo: "Falso o Verdadero", pregunta: "Un riesgo clasificado en zona verde (baja probabilidad y bajo impacto) exige contratar inmediatamente pólizas de seguro internacionales.", opciones: ["Falso", "Verdadero"], correcta: "Falso", retro: "Falso. Los riesgos en zona verde habitualmente se aceptan y monitorean periódicamente sin inversiones desproporcionadas." },
+ { id: 34, cat: "iliquidez", tipo: "Opción Múltiple", pregunta: "¿Qué herramienta permite listar exhaustivamente los riesgos conocidos en el sector para evaluar si aplican a los departamentos de la empresa?", opciones: ["Inventario o Catálogo general de eventos de riesgo", "Estado de flujos descontados", "Dictamen sin salvedades", "Arqueo de caja chica"], correcta: "Inventario o Catálogo general de eventos de riesgo", retro: "Los catálogos o inventarios de riesgos sirven como guía estandarizada para verificar la exposición por proceso." },
+ { id: 35, cat: "iliquidez", tipo: "Completar la frase", pregunta: "El proceso sistemático de identificar, analizar, evaluar, tratar y supervisar los riesgos del negocio se resume como ______ del riesgo.", opciones: ["Gestión o Administración", "Liquidación", "Ocultamiento", "Fragmentación"], correcta: "Gestión o Administración", retro: "La gestión/administración de riesgos abarca el ciclo integral y continuo para proteger el valor de la empresa." },
+ { id: 36, cat: "iliquidez", tipo: "Falso o Verdadero", pregunta: "Los mapas de riesgos son instrumentos estáticos que nunca deben modificarse una vez aprobados por la dirección general.", opciones: ["Falso", "Verdadero"], correcta: "Falso", retro: "Falso. Los mapas de riesgos son dinámicos y deben actualizarse continuamente frente a cambios del entorno o de los procesos." }
+];
+
+// VILLANOS ADAPTADOS A RIESGO Y CONTROL
+const VILLANOS = {
+ bancarrota: { nombre: "Riesgo Inherente", frase: "Sin controles preventivos, colapso tu operación." },
+ fraude: { nombre: "Conflicto Ético", frase: "Vulneraré tu independencia y tus papeles de trabajo." },
+ iliquidez: { nombre: "Falla de Control Interno", frase: "Tus procesos sin segregar quedarán expuestos." }
+};
+
+// NIVELES DE PROGRESIÓN (CURVA EXIGENTE)
+const NIVELES = [
+ { nombre: "Huevo Contable", minXp: 0, nextXp: 150 },
+ { nombre: "Analista Junior", minXp: 150, nextXp: 450 },
+ { nombre: "Auditor Senior", minXp: 450, nextXp: 1000 },
+ { nombre: "Director de Auditoría", minXp: 1000, nextXp: 2200 },
+ { nombre: "CFO / Socio Legendario", minXp: 2200, nextXp: Infinity }
+];
+
+// DIÁLOGOS ESTRICTOS POR SALUD / ESTADO EMOCIONAL DE FINANCÍN
+const DIALOGOS_POR_VIDA = {
+ 3: [
+  "¡Todo bajo control! Los dominios de IIA México están bien blindados.",
+  "¡Revisión impecable! La evidencia respalda nuestro criterio.",
+  "¡Tranquilo, colega! Con esta segregación de funciones no pasa nada.",
+  "¡Mapeo de riesgos al 100%! El riesgo residual está en zona verde."
+ ],
+ 2: [
+  "Auch... eso dolió. El riesgo residual acaba de subir.",
+  "Cuidado... una falla más y nos emiten una salvedad en el informe.",
+  "Sentí una amenaza a la objetividad... ¡necesito concentrarme!",
+  "El monstruo detectó una debilidad de control. ¡Usemos salvaguardas!"
+ ],
+ 1: [
+  "¡COLEGA, TENGO MIEDO! ¡El riesgo crítico está encima de nosotros!",
+  "¡Nos queda UN solo control antes de que colapse la auditoría!",
+  "¡Por favor, no falles esta pregunta o nos revocan la cédula!",
+  "¡Alerta roja! ¡Aplica el marco MIARE antes de la bancarrota!"
+ ],
+ 0: [
+  "Control interno colapsado... dictamen con abstención de opinión.",
+  "El riesgo material nos devoró por completo...",
+  "Perdón por fallar la auditoría..."
+ ]
+};
+
+// ESTADO GLOBAL
+let state = {
+ coins: parseInt(localStorage.getItem('fin_ctrl_coins')) || 10,
+ xp: parseInt(localStorage.getItem('fin_ctrl_xp')) || 0,
+ inv: JSON.parse(localStorage.getItem('fin_ctrl_inv')) || { "5050": 0, "escudo": 0, "pista": 0 },
+ cosm: JSON.parse(localStorage.getItem('fin_ctrl_cosm')) || {
+  comprados: [],
+  equipado: null
+ },
+ vidas: 3,
+ casoActual: 0,
+ preguntasRonda: [],
+ categoriaVillano: "bancarrota",
+ racha: 0,
+ aciertos: 0,
+ opcionesEliminadas: [],
+ escudoActivo: false,
+ pistaActiva: false,
+ animState: "neutral", // neutral, eureka, panic, hit
+ eventoActivo: null
+};
+
+function guardarProgreso() {
+ localStorage.setItem('fin_ctrl_coins', state.coins);
+ localStorage.setItem('fin_ctrl_xp', state.xp);
+ localStorage.setItem('fin_ctrl_inv', JSON.stringify(state.inv));
+ localStorage.setItem('fin_ctrl_cosm', JSON.stringify(state.cosm));
+}
+
+// SONIDOS CON WEB AUDIO API
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playBeep(freq, type, duration) {
+ try {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+  osc.stop(audioCtx.currentTime + duration);
+ } catch(e) {}
+}
+function sfxCorrect() { playBeep(587.33, 'triangle', 0.12); setTimeout(() => playBeep(880, 'triangle', 0.2), 90); }
+function sfxError() { playBeep(160, 'sawtooth', 0.3); }
+function sfxPowerup() { playBeep(440, 'sine', 0.1); setTimeout(() => playBeep(660, 'sine', 0.12), 70); }
+
+function showToast(txt) {
+ const t = document.getElementById('toast-msg');
+ t.innerText = txt;
+ t.classList.add('show');
+ setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function getNivelIndex() {
+ for (let i = NIVELES.length - 1; i >= 0; i--) {
+  if (state.xp >= NIVELES[i].minXp) return i;
+ }
+ return 0;
+}
+
+// =============================================================================
+// RENDERIZADO VECTORIAL SVG NATIVO (SIN EMOJIS)
+// =============================================================================
+function renderFinancinSVG(nivelIndex, vidas, size=100, anim="neutral") {
+ const bodyColor = "#FACC15";
+ const strokeColor = "#000000";
+
+ // Ojos y microexpresiones según estado
+ let ojosSVG = "";
+ let alitasSVG = `
+  <path d="M 18 56 C 14 62 18 72 26 66" fill="${bodyColor}" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" />
+  <path d="M 82 56 C 86 62 82 72 74 66" fill="${bodyColor}" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" />
+ `;
+
+ if (anim === "eureka") {
+  // Ojos de estrella dorada de acierto
+  ojosSVG = `
+   <polygon points="38,40 40,46 46,46 41,49 43,55 38,51 33,55 35,49 30,46 36,46" fill="#ca8a04" stroke="#000" stroke-width="1.2" />
+   <polygon points="62,40 64,46 70,46 65,49 67,55 62,51 57,55 59,49 54,46 60,46" fill="#ca8a04" stroke="#000" stroke-width="1.2" />
+   <circle cx="30" cy="54" r="4" fill="#f87171" opacity="0.7" />
+   <circle cx="70" cy="54" r="4" fill="#f87171" opacity="0.7" />
+  `;
+  // Alitas arriba celebrando
+  alitasSVG = `
+   <path d="M 18 50 C 12 40 20 34 26 44" fill="${bodyColor}" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" />
+   <path d="M 82 50 C 88 40 80 34 74 44" fill="${bodyColor}" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" />
+  `;
+ } else if (vidas <= 0) {
+  // Derrota (Ojos cruzados)
+  ojosSVG = `
+   <path d="M 33 43 L 43 51 M 43 43 L 33 51" stroke="#000" stroke-width="3" stroke-linecap="round" />
+   <path d="M 57 43 L 67 51 M 67 43 L 57 51" stroke="#000" stroke-width="3" stroke-linecap="round" />
+  `;
+ } else if (vidas === 1 || anim === "panic") {
+  // Ojos llorosos / espirales de pánico
+  ojosSVG = `
+   <path d="M 32 48 Q 38 43 44 48" stroke="#000" stroke-width="3" stroke-linecap="round" fill="none" />
+   <path d="M 56 48 Q 62 43 68 48" stroke="#000" stroke-width="3" stroke-linecap="round" fill="none" />
+   <rect x="24" y="32" width="14" height="6" rx="2" fill="#fb923c" stroke="#000" stroke-width="1.5" transform="rotate(20 31 35)" />
+   <path class="svg-tear" d="M 36 52 C 36 50 38 47 38 47 C 38 47 40 50 40 52 C 40 54 38 56 36 52 Z" fill="#38bdf8" stroke="#000" stroke-width="1" />
+   <path class="svg-tear" style="animation-delay: 0.6s;" d="M 64 52 C 64 50 66 47 66 47 C 66 47 68 50 68 52 C 68 54 66 56 64 52 Z" fill="#38bdf8" stroke="#000" stroke-width="1" />
+  `;
+ } else if (vidas === 2) {
+  // Ojo con parche/curita de concentración nerviosa
+  ojosSVG = `
+   <ellipse cx="38" cy="47" rx="5" ry="4" fill="#000" />
+   <path d="M 33 40 Q 38 38 43 41" stroke="#000" stroke-width="2.5" stroke-linecap="round" fill="none" />
+   <rect x="56" y="44" width="16" height="8" rx="2" fill="#60a5fa" stroke="#000" stroke-width="1.5" transform="rotate(-15 64 48)" />
+   <circle cx="64" cy="48" r="1.5" fill="#fff" />
+   <path d="M 74 36 C 74 33 76 30 76 30 C 76 30 78 33 78 36 C 78 38 76 40 74 36 Z" fill="#38bdf8" stroke="#000" stroke-width="1.2" />
+  `;
+ } else {
+  // 3 Vidas: Normal concentrado con parpadeo
+  ojosSVG = `
+   <ellipse class="svg-eye" cx="38" cy="46" rx="5" ry="6" fill="#000" />
+   <circle cx="39.5" cy="44" r="2" fill="#fff" />
+   <ellipse class="svg-eye" cx="62" cy="46" rx="5" ry="6" fill="#000" />
+   <circle cx="63.5" cy="44" r="2" fill="#fff" />
+   <circle cx="30" cy="53" r="4.5" fill="#f87171" opacity="0.6" />
+   <circle cx="70" cy="53" r="4.5" fill="#f87171" opacity="0.6" />
+  `;
+ }
+
+ // Accesorios por Rango Base
+ let accesorioRango = "";
+ if (nivelIndex === 0) {
+  accesorioRango = `<path d="M 30 26 L 36 16 L 44 24 L 52 14 L 60 24 L 68 16 L 72 26 Z" fill="#ffffff" stroke="#000" stroke-width="2.5" stroke-linejoin="round" />`;
+ } else if (nivelIndex === 1) {
+  accesorioRango = `
+   <polygon points="50,66 46,78 50,86 54,78" fill="#3b82f6" stroke="#000" stroke-width="2" />
+   <circle cx="50" cy="66" r="3" fill="#1d4ed8" stroke="#000" stroke-width="1.5" />
+  `;
+ } else if (nivelIndex === 2) {
+  accesorioRango = `
+   <ellipse cx="50" cy="22" rx="26" ry="7" fill="#475569" stroke="#000" stroke-width="2.5" />
+   <path d="M 28 22 C 28 10 72 10 72 22 Z" fill="#334155" stroke="#000" stroke-width="2.5" />
+   <circle cx="76" cy="62" r="10" fill="#e0f2fe" stroke="#000" stroke-width="2.5" opacity="0.9" />
+   <line x1="83" y1="69" x2="93" y2="79" stroke="#78350f" stroke-width="4" stroke-linecap="round" />
+  `;
+ } else if (nivelIndex === 3) {
+  accesorioRango = `
+   <rect x="26" y="16" width="48" height="12" rx="3" fill="#1e293b" stroke="#000" stroke-width="2.5" />
+   <polygon points="50,64 42,80 50,88 58,80" fill="#dc2626" stroke="#000" stroke-width="2" />
+  `;
+ } else {
+  // CFO / Socio Legendario
+  accesorioRango = `
+   <polygon points="34,22 40,8 50,18 60,8 66,22" fill="#FACC15" stroke="#000" stroke-width="2.5" stroke-linejoin="round" />
+   <circle cx="40" cy="8" r="2" fill="#ef4444" />
+   <circle cx="50" cy="18" r="2" fill="#3b82f6" />
+   <circle cx="60" cy="8" r="2" fill="#ef4444" />
+   <rect x="70" y="60" width="18" height="14" rx="2" fill="#78350f" stroke="#000" stroke-width="2" />
+   <path d="M 75 60 L 75 56 L 83 56 L 83 60" stroke="#000" stroke-width="2" fill="none" />
+  `;
+ }
+
+ // Capa de Cosméticos SVG Comprados y Equipados
+ let cosmSVG = "";
+ const eq = state.cosm.equipado;
+ if (eq === "monoculo") {
+  cosmSVG = `
+   <!-- Monóculo de Auditoría SVG -->
+   <circle cx="38" cy="46" r="9" fill="none" stroke="#eab308" stroke-width="2.5" />
+   <circle cx="38" cy="46" r="8" fill="#e0f2fe" opacity="0.35" />
+   <path d="M 47 46 Q 52 60 50 72" stroke="#eab308" stroke-width="1.5" fill="none" stroke-linecap="round" />
+  `;
+ } else if (eq === "visera") {
+  cosmSVG = `
+   <!-- Visera Verde de Contador SVG -->
+   <path d="M 22 28 C 30 18 70 18 78 28 C 65 33 35 33 22 28 Z" fill="#059669" opacity="0.85" stroke="#000" stroke-width="2.2" />
+   <path d="M 22 28 Q 50 24 78 28" stroke="#1e293b" stroke-width="3" fill="none" />
+  `;
+ } else if (eq === "gafas") {
+  cosmSVG = `
+   <!-- Gafas Oscuras VIP SVG -->
+   <polygon points="26,40 46,40 44,52 28,52" fill="#0f172a" stroke="#000" stroke-width="2" />
+   <polygon points="54,40 74,40 72,52 56,52" fill="#0f172a" stroke="#000" stroke-width="2" />
+   <line x1="46" y1="44" x2="54" y2="44" stroke="#000" stroke-width="2.5" />
+   <line x1="30" y1="42" x2="40" y2="50" stroke="#94a3b8" stroke-width="1.2" opacity="0.6" />
+   <line x1="58" y1="42" x2="68" y2="50" stroke="#94a3b8" stroke-width="1.2" opacity="0.6" />
+  `;
+ } else if (eq === "traje") {
+  cosmSVG = `
+   <!-- Traje Ejecutivo Burgundy FACPYA SVG -->
+   <path d="M 26 64 C 26 56 74 56 74 64 L 70 85 L 30 85 Z" fill="#800020" stroke="#000" stroke-width="2.2" />
+   <polygon points="50,60 44,70 50,75 56,70" fill="#ffffff" />
+   <polygon points="50,70 47,82 50,86 53,82" fill="#eab308" stroke="#000" stroke-width="1.2" />
+  `;
+ } else if (eq === "capa") {
+  cosmSVG = `
+   <!-- Capa Dorada de Control SVG -->
+   <path d="M 22 55 Q 12 75 16 90 Q 50 84 84 90 Q 88 75 78 55 Z" fill="#eab308" stroke="#000" stroke-width="2.5" />
+   <circle cx="50" cy="56" r="4" fill="#800020" stroke="#000" stroke-width="1.5" />
+  `;
+ }
+
+ return `
+ <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cuerpo del Pollito -->
+  <ellipse cx="50" cy="55" rx="34" ry="30" fill="${bodyColor}" stroke="${strokeColor}" stroke-width="3" />
+  <!-- Alitas -->
+  ${alitasSVG}
+  <!-- Patitas -->
+  <path d="M 40 84 L 40 92 M 36 92 L 44 92" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round" />
+  <path d="M 60 84 L 60 92 M 56 92 L 64 92" stroke="#ea580c" stroke-width="3.5" stroke-linecap="round" />
+  <!-- Pico -->
+  <polygon points="45,52 55,52 50,60" fill="#f97316" stroke="${strokeColor}" stroke-width="2.5" stroke-linejoin="round" />
+  <!-- Expresión -->
+  ${ojosSVG}
+  <!-- Accesorios de Nivel -->
+  ${accesorioRango}
+  <!-- Cosmético Equipado -->
+  ${cosmSVG}
+ </svg>
+ `;
+}
+
+function renderVillainSVG(cat, size=100) {
+ if (cat === "bancarrota") {
+  // Riesgo Inherente: Monstruo Rojo con Cuernos
+  return `
+  <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M 28 32 C 18 18 10 24 16 12 C 28 14 34 26 34 32 Z" fill="#991b1b" stroke="#000" stroke-width="2.5" />
+   <path d="M 72 32 C 82 18 90 24 84 12 C 72 14 66 26 66 32 Z" fill="#991b1b" stroke="#000" stroke-width="2.5" />
+   <rect x="22" y="28" width="56" height="56" rx="16" fill="#ef4444" stroke="#000" stroke-width="3.5" />
+   <polygon points="30,42 44,46 42,52 30,46" fill="#fef08a" stroke="#000" stroke-width="2" />
+   <circle cx="38" cy="47" r="2.5" fill="#000" />
+   <polygon points="70,42 56,46 58,52 70,46" fill="#fef08a" stroke="#000" stroke-width="2" />
+   <circle cx="62" cy="47" r="2.5" fill="#000" />
+   <path d="M 32 64 Q 50 78 68 64 Z" fill="#450a0a" stroke="#000" stroke-width="2.5" />
+   <polygon points="38,64 42,70 46,64" fill="#ffffff" />
+   <polygon points="54,64 58,70 62,64" fill="#ffffff" />
+  </svg>
+  `;
+ } else if (cat === "fraude") {
+  // Conflicto Ético: Sombra Púrpura con Antifaz
+  return `
+  <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <rect x="30" y="8" width="40" height="24" rx="4" fill="#1e1b4b" stroke="#000" stroke-width="2.5" />
+   <rect x="20" y="30" width="60" height="7" rx="3" fill="#312e81" stroke="#000" stroke-width="2.5" />
+   <circle cx="50" cy="56" r="28" fill="#a855f7" stroke="#000" stroke-width="3" />
+   <path d="M 26 50 Q 50 56 74 50 Q 76 60 66 60 Q 50 58 34 60 Z" fill="#0f172a" stroke="#000" stroke-width="2" />
+   <ellipse cx="38" cy="54" rx="4" ry="2.5" fill="#facc15" />
+   <ellipse cx="62" cy="54" rx="4" ry="2.5" fill="#facc15" />
+   <path d="M 38 68 Q 52 78 64 66" stroke="#000" stroke-width="3" stroke-linecap="round" fill="none" />
+  </svg>
+  `;
+ } else {
+  // Falla de Control: Remolino Azul
+  return `
+  <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path d="M 20 65 Q 10 75 22 88 Q 30 78 28 65" fill="#0284c7" stroke="#000" stroke-width="2.5" />
+   <path d="M 80 65 Q 90 75 78 88 Q 70 78 72 65" fill="#0284c7" stroke="#000" stroke-width="2.5" />
+   <ellipse cx="50" cy="44" rx="30" ry="26" fill="#38bdf8" stroke="#000" stroke-width="3" />
+   <circle cx="38" cy="42" r="7" fill="#fff" stroke="#000" stroke-width="2" />
+   <circle cx="40" cy="42" r="3.5" fill="#000" />
+   <circle cx="62" cy="42" r="7" fill="#fff" stroke="#000" stroke-width="2" />
+   <circle cx="60" cy="42" r="3.5" fill="#000" />
+   <ellipse cx="50" cy="56" rx="6" ry="7" fill="#0c4a6e" stroke="#000" stroke-width="2" />
+  </svg>
+  `;
+ }
+}
+
+// =============================================================================
+// SISTEMA DE TIENDA Y VESTIDOR
+// =============================================================================
+function setShopTab(tab) {
+ document.getElementById('shop-tab-pwr').style.display = tab === 'pwr' ? 'flex' : 'none';
+ document.getElementById('shop-tab-cosm').style.display = tab === 'cosm' ? 'flex' : 'none';
+}
+
+function updateShopUI() {
+ document.getElementById('inv-5050').innerText = state.inv["5050"];
+ document.getElementById('inv-escudo').innerText = state.inv["escudo"];
+ document.getElementById('inv-pista').innerText = state.inv["pista"];
+
+ const items = ['monoculo', 'visera', 'gafas', 'traje', 'capa'];
+ items.forEach(key => {
+  const btn = document.getElementById(`btn-cosm-${key}`);
+  if (!btn) return;
+  const comprado = state.cosm.comprados.includes(key);
+  const equipado = state.cosm.equipado === key;
+
+  if (equipado) {
+   btn.innerText = "Equipado";
+   btn.style.background = "#4ade80";
+  } else if (comprado) {
+   btn.innerText = "Equipar";
+   btn.style.background = "#38bdf8";
+  }
+ });
+}
+
+function comprarItem(clave, costo) {
+ if (state.coins >= costo) {
+  state.coins -= costo;
+  state.inv[clave]++;
+  guardarProgreso();
+  sfxPowerup();
+  showToast(`¡Herramienta adquirida!`);
+  updateTopBars();
+  updateShopUI();
+ } else {
+  sfxError();
+  showToast("Puntos insuficientes");
+ }
+}
+
+function gestionarCosmetico(clave, costo) {
+ const comprado = state.cosm.comprados.includes(clave);
+ if (comprado) {
+  if (state.cosm.equipado === clave) {
+   state.cosm.equipado = null;
+   showToast("Cosmético desequipado");
+  } else {
+   state.cosm.equipado = clave;
+   showToast("¡Cosmético equipado en Financín!");
+  }
+ } else {
+  if (state.coins >= costo) {
+   state.coins -= costo;
+   state.cosm.comprados.push(clave);
+   state.cosm.equipado = clave;
+   showToast("¡Cosmético adquirido y equipado!");
+   sfxPowerup();
+  } else {
+   sfxError();
+   showToast("Puntos insuficientes");
+   return;
+  }
+ }
+ guardarProgreso();
+ updateTopBars();
+ updateShopUI();
+ updateMissionHeader();
+}
+
+function abrirTienda() {
+ updateTopBars();
+ updateShopUI();
+ document.getElementById('shop-modal').classList.add('active');
+}
+
+function cerrarTienda() {
+ document.getElementById('shop-modal').classList.remove('active');
+ if (state.preguntasRonda && state.preguntasRonda.length > 0 && state.casoActual < 5 && state.vidas > 0) {
+  renderQuestion();
+ }
+}
+
+// =============================================================================
+// CONTROL DEL JUEGO (5 PREGUNTAS POR RONDA)
+// =============================================================================
+function updateTopBars() {
+ const nIdx = getNivelIndex();
+ const nivel = NIVELES[nIdx];
+ document.getElementById('evo-name').innerText = nivel.nombre;
+ document.getElementById('evo-badge-svg').innerHTML = renderFinancinSVG(nIdx, 3, 38, "neutral");
+ document.getElementById('coins-count').innerText = state.coins;
+
+ if (nivel.nextXp !== Infinity) {
+  const range = nivel.nextXp - nivel.minXp;
+  const prog = state.xp - nivel.minXp;
+  const pct = Math.min(100, Math.max(0, (prog / range) * 100));
+  document.getElementById('xp-text').innerText = `${state.xp} / ${nivel.nextXp}`;
+  document.getElementById('xp-bar').style.width = `${pct}%`;
+ } else {
+  document.getElementById('xp-text').innerText = `${state.xp} (MÁX)`;
+  document.getElementById('xp-bar').style.width = `100%`;
+ }
+ document.getElementById('streak-badge').innerText = state.racha >= 2 ? `RACHA x${state.racha}` : '';
+}
+
+function updateMissionHeader() {
+ const mBox = document.getElementById('mission-box');
+ mBox.classList.remove('danger-1', 'danger-2');
+
+ let hearts = "♥♥♥";
+ if (state.vidas === 2) {
+  mBox.classList.add('danger-2');
+  hearts = "♥♥♡";
+ } else if (state.vidas === 1) {
+  mBox.classList.add('danger-1');
+  hearts = "♥♡♡";
+ } else if (state.vidas <= 0) {
+  mBox.classList.add('danger-1');
+  hearts = "♡♡♡";
+ }
+
+ const vInfo = VILLANOS[state.categoriaVillano];
+ document.getElementById('villain-tag').innerText = vInfo.nombre;
+
+ const nIdx = getNivelIndex();
+ const fContainer = document.getElementById('financin-avatar');
+ fContainer.innerHTML = renderFinancinSVG(nIdx, state.vidas, 105, state.animState);
+
+ if (state.vidas === 1 || state.animState === "panic") {
+  fContainer.classList.add('tremble-anim');
+ } else {
+  fContainer.classList.remove('tremble-anim');
+ }
+
+ document.getElementById('villain-avatar').innerHTML = renderVillainSVG(state.categoriaVillano, 105);
+ document.getElementById('health-hearts').innerText = hearts;
+ document.getElementById('progress-text').innerText = `${state.casoActual + 1}/5`;
+
+ // Pista de persecución
+ const villPos = Math.min(76, 6 + (3 - state.vidas) * 24);
+ document.getElementById('chase-villain').style.left = `${villPos}%`;
+ document.getElementById('chase-villain').innerHTML = renderVillainSVG(state.categoriaVillano, 32);
+ document.getElementById('chase-financin').innerHTML = renderFinancinSVG(nIdx, state.vidas, 32, "neutral");
+
+ // SELECCIÓN EXCLUSIVA SEGÚN VIDAS ACTUALES
+ const listaActual = DIALOGOS_POR_VIDA[Math.max(0, state.vidas)];
+ const txt = listaActual[Math.floor(Math.random() * listaActual.length)];
+ document.getElementById('speech-text').innerText = `“${txt}”`;
+}
+
+function iniciarMision() {
+ const shuffled = [...BANCO_PREGUNTAS].sort(() => 0.5 - Math.random());
+ state.preguntasRonda = shuffled.slice(0, 5); // EXACTAMENTE 5 CASOS POR RONDA
+
+ const counts = {};
+ state.preguntasRonda.forEach(p => counts[p.cat] = (counts[p.cat] || 0) + 1);
+ state.categoriaVillano = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+ state.vidas = 3;
+ state.casoActual = 0;
+ state.aciertos = 0;
+ state.racha = 0;
+ state.animState = "neutral";
+ resetPowerups();
+ checarEventoAleatorio();
+ renderQuestion();
+}
+
+function resetPowerups() {
+ state.opcionesEliminadas = [];
+ state.escudoActivo = false;
+ state.pistaActiva = false;
+}
+
+function checarEventoAleatorio() {
+ const roll = Math.random();
+ if (roll < 0.12) {
+  state.eventoActivo = {
+   tipo: "bono",
+   titulo: "Dictamen Favorable del Comité",
+   desc: "Multiplicador x3 en puntos si respondes correctamente este caso.",
+   mult: 3
+  };
+ } else if (roll < 0.22) {
+  state.eventoActivo = {
+   tipo: "urgencia",
+   titulo: "Inspección Especial Inopinada",
+   desc: "Riesgo de alta visibilidad: +15 XP adicionales al acertar.",
+   bonusXp: 15
+  };
+ } else {
+  state.eventoActivo = null;
+ }
+}
+
+function renderStartScreen() {
+ updateTopBars();
+ updateMissionHeader();
+ const container = document.getElementById('main-content');
+ container.innerHTML = `
+ <div class="game-card" style="text-align: center;">
+  <h3 style="margin-bottom: 6px;">Protocolo de Auditoría y Control</h3>
+  <p style="font-size: 13px; color: #475569; margin-bottom: 14px;">
+   • Resolverás <b>5 casos</b> por ronda para evaluar riesgos de Semanas 1 a 3.<br>
+   • Cuentas con <b>3 controles (vidas)</b> antes de que el riesgo comprometa la entidad.<br>
+   • La economía es exigente: ahorra puntos para desbloquear los cosméticos vectoriales de Financín.
+  </p>
+  <button class="btn-action" onclick="iniciarMision()">INICIAR RONDA (5 CASOS)</button>
+ </div>
+ `;
+}
+
+function renderQuestion() {
+ updateTopBars();
+ updateMissionHeader();
+ const p = state.preguntasRonda[state.casoActual];
+ const container = document.getElementById('main-content');
+ const opciones = [...p.opciones].sort(() => 0.5 - Math.random());
+
+ let optionsHTML = '';
+ opciones.forEach((opc) => {
+  const isEliminated = state.opcionesEliminadas.includes(opc);
+  optionsHTML += `
+  <button class="btn-option" ${isEliminated ? 'disabled' : ''} onclick="responder('${opc.replace(/'/g, "\\'")}')">
+   ${isEliminated ? '✖' : '■'} ${opc}
+  </button>
+  `;
+ });
+
+ let bannerEvento = '';
+ if (state.eventoActivo) {
+  bannerEvento = `
+  <div class="event-banner">
+   <span>★ <b>${state.eventoActivo.titulo}:</b> ${state.eventoActivo.desc}</span>
+  </div>
+  `;
+ }
+
+ container.innerHTML = `
+ <div class="game-card">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+   <span class="badge-brutal badge-blue">Caso ${state.casoActual + 1} de 5 • ${p.tipo}</span>
+   ${state.racha >= 2 ? `<span class="badge-brutal badge-red">Racha x${state.racha}</span>` : ''}
+  </div>
+
+  ${bannerEvento}
+
+  <div class="question-text">${p.pregunta}</div>
+
+  <div class="powerups-bar">
+   <button class="btn-pwr" onclick="usar5050()" ${state.inv["5050"] <= 0 || state.opcionesEliminadas.length > 0 ? 'disabled' : ''}>
+    50/50 (${state.inv["5050"]})
+   </button>
+   <button class="btn-pwr" onclick="usarEscudo()" ${state.inv["escudo"] <= 0 || state.escudoActivo ? 'disabled' : ''}>
+    Salvaguarda (${state.inv["escudo"]})
+   </button>
+   <button class="btn-pwr" onclick="usarPista()" ${state.inv["pista"] <= 0 || state.pistaActiva ? 'disabled' : ''}>
+    Pista IIA (${state.inv["pista"]})
+   </button>
+  </div>
+
+  ${state.escudoActivo ? '<div style="font-size: 11px; font-weight: 800; color: var(--blue);">Salvaguarda activa: el siguiente error no restará vida.</div>' : ''}
+  ${state.pistaActiva ? `<div style="background: #e0f2fe; border: 2px solid #000; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #0369a1;">Pista: ${p.retro.split('.')[0]}...</div>` : ''}
+
+  <div class="options-grid">
+   ${optionsHTML}
+  </div>
+ </div>
+ `;
+}
+
+function usar5050() {
+ const p = state.preguntasRonda[state.casoActual];
+ const incorrectas = p.opciones.filter(o => o !== p.correcta);
+ state.opcionesEliminadas = incorrectas.sort(() => 0.5 - Math.random()).slice(0, 2);
+ state.inv["5050"]--;
+ guardarProgreso();
+ sfxPowerup();
+ showToast("2 opciones descartadas");
+ renderQuestion();
+}
+
+function usarEscudo() {
+ state.escudoActivo = true;
+ state.inv["escudo"]--;
+ guardarProgreso();
+ sfxPowerup();
+ showToast("Salvaguarda activada");
+ renderQuestion();
+}
+
+function usarPista() {
+ state.pistaActiva = true;
+ state.inv["pista"]--;
+ guardarProgreso();
+ sfxPowerup();
+ showToast("Pista técnica revelada");
+ renderQuestion();
+}
+
+function responder(opcionSeleccionada) {
+ const p = state.preguntasRonda[state.casoActual];
+ const esCorrecta = opcionSeleccionada === p.correcta;
+ const container = document.getElementById('main-content');
+
+ let tituloFeedback = "";
+ let msgRecompensa = "";
+
+ if (esCorrecta) {
+  sfxCorrect();
+  state.aciertos++;
+  state.racha++;
+  state.animState = "eureka";
+
+  // Economía balanceada
+  let baseCoins = 2;
+  let baseXP = 8;
+
+  if (state.racha >= 3) { baseCoins += 2; baseXP += 4; }
+  else if (state.racha >= 2) { baseCoins += 1; baseXP += 2; }
+
+  if (state.eventoActivo) {
+   if (state.eventoActivo.mult) baseCoins *= state.eventoActivo.mult;
+   if (state.eventoActivo.bonusXp) baseXP += state.eventoActivo.bonusXp;
+  }
+
+  state.coins += baseCoins;
+  state.xp += baseXP;
+  guardarProgreso();
+
+  tituloFeedback = "¡EVALUACIÓN CORRECTA! Control aplicado con precisión.";
+  msgRecompensa = `+${baseCoins} pts | +${baseXP} XP`;
+ } else {
+  sfxError();
+  state.racha = 0;
+  state.xp = Math.max(0, state.xp - 4);
+  guardarProgreso();
+
+  if (state.escudoActivo) {
+   state.animState = "panic";
+   tituloFeedback = "¡SALVAGUARDA EFECTIVA! El escudo absorbió la deficiencia.";
+  } else {
+   state.vidas--;
+   state.animState = state.vidas === 1 ? "panic" : "hit";
+   tituloFeedback = "¡DEFICIENCIA DE CONTROL! El riesgo impactó a la entidad.";
+  }
+ }
+
+ updateTopBars();
+ updateMissionHeader();
+
+ container.innerHTML = `
+ <div class="game-card">
+  <div style="font-size: 15px; font-weight: 800; color: ${esCorrecta ? '#15803d' : '#b91c1c'};">
+   ${tituloFeedback}
+  </div>
+  ${msgRecompensa ? `<div style="font-size: 13px; font-weight: 800; color: #0284c7;">${msgRecompensa}</div>` : ''}
+  <div class="feedback-box">
+   <div><b>Respuesta seleccionada:</b> ${opcionSeleccionada}</div>
+   <div><b>Criterio técnico:</b> <span style="color: #0369a1; font-weight: bold;">${p.correcta}</span></div>
+   <div style="margin-top: 4px; font-size: 12px;"><b>Fundamento:</b> ${p.retro}</div>
+  </div>
+  <button class="btn-action" onclick="avanzarCaso()">
+   ${state.casoActual >= 4 || state.vidas <= 0 ? 'VER RESULTADOS DE AUDITORÍA' : 'SIGUIENTE CASO'}
+  </button>
+ </div>
+ `;
+}
+
+function avanzarCaso() {
+ state.animState = "neutral";
+ if (state.vidas <= 0) {
+  renderGameOver();
+  return;
+ }
+ state.casoActual++;
+ if (state.casoActual >= 5) {
+  renderVictory();
+  return;
+ }
+ resetPowerups();
+ checarEventoAleatorio();
+ renderQuestion();
+}
+
+function renderVictory() {
+ sfxCorrect();
+ updateTopBars();
+ updateMissionHeader();
+ const nIdx = getNivelIndex();
+ const nivel = NIVELES[nIdx];
+ const container = document.getElementById('main-content');
+
+ container.innerHTML = `
+ <div class="game-card" style="text-align: center; border-color: #22c55e;">
+  <h2 style="color: #15803d; margin-bottom: 4px;">DICTAMEN LIMPIO</h2>
+  <p style="font-size: 13px; color: #475569;">Financín mitigó al ${VILLANOS[state.categoriaVillano].nombre}</p>
+
+  <div style="display: flex; justify-content: center; margin: 12px 0;">
+   ${renderFinancinSVG(nIdx, 3, 110, "eureka")}
+  </div>
+
+  <div class="feedback-box" style="text-align: center;">
+   <div style="font-weight: 800; font-size: 14px;">Rango Actual: ${nivel.nombre}</div>
+   <div>Completaste <b>${state.aciertos} de 5 casos</b> con <b>${state.vidas} control(es)</b> restantes.</div>
+   <div style="margin-top: 4px;">Puntos acumulados: <b>${state.coins}</b> | XP Total: <b>${state.xp}</b></div>
+  </div>
+  <button class="btn-action" onclick="iniciarMision()">JUGAR OTRA RONDA (5 CASOS)</button>
+ </div>
+ `;
+}
+
+function renderGameOver() {
+ sfxError();
+ updateTopBars();
+ updateMissionHeader();
+ const container = document.getElementById('main-content');
+
+ container.innerHTML = `
+ <div class="game-card" style="text-align: center; border-color: #ef4444;">
+  <h2 style="color: #b91c1c; margin-bottom: 4px;">DEFICIENCIA MATERIAL</h2>
+  <p style="font-size: 13px; color: #475569;">El ${VILLANOS[state.categoriaVillano].nombre} superó los controles.</p>
+
+  <div style="display: flex; justify-content: center; margin: 12px 0;">
+   ${renderFinancinSVG(getNivelIndex(), 0, 110, "panic")}
+  </div>
+
+  <div class="feedback-box">
+   <p style="font-size: 12px; text-align: center;">
+    Conserva tus <b>${state.coins} puntos</b> y <b>${state.xp} XP</b>. Revisa los criterios de IIA México y vuelve a intentarlo.
+   </p>
+  </div>
+  <button class="btn-action" onclick="iniciarMision()">REINTENTAR EVALUACIÓN</button>
+ </div>
+ `;
+}
+
+renderStartScreen();
+</script>
+</body>
+</html>
