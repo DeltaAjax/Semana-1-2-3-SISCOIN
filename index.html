@@ -670,7 +670,7 @@ const DIALOGOS_POR_VIDA = {
  ]
 };
 
-// ESTADO GLOBAL
+// ESTADO GLOBAL CON RECUPERACIÓN DE LOCALSTORAGE
 let state = {
  coins: parseInt(localStorage.getItem('fin_ctrl_coins')) || 10,
  xp: parseInt(localStorage.getItem('fin_ctrl_xp')) || 0,
@@ -937,7 +937,7 @@ function renderVillainSVG(cat, size=100) {
 }
 
 // =============================================================================
-// SISTEMA DE TIENDA Y VESTIDOR
+// SISTEMA DE TIENDA Y VESTIDOR (CON PERSISTENCIA CORREGIDA)
 // =============================================================================
 function setShopTab(tab) {
  document.getElementById('shop-tab-pwr').style.display = tab === 'pwr' ? 'flex' : 'none';
@@ -1004,6 +1004,7 @@ function gestionarCosmetico(clave, costo) {
    return;
   }
  }
+ // PERSISTENCIA TOTAL
  guardarProgreso();
  updateTopBars();
  updateShopUI();
@@ -1145,7 +1146,7 @@ function renderStartScreen() {
   <p style="font-size: 13px; color: #475569; margin-bottom: 14px;">
    • Resolverás <b>5 casos</b> por ronda para evaluar riesgos de Semanas 1 a 3.<br>
    • Cuentas con <b>3 controles (vidas)</b> antes de que el riesgo comprometa la entidad.<br>
-   • La economía es exigente: ahorra puntos para desbloquear los cosméticos vectoriales de Financín.
+   • Los cosméticos adquiridos se guardan permanentemente en tu vestidor.
   </p>
   <button class="btn-action" onclick="iniciarMision()">INICIAR RONDA (5 CASOS)</button>
  </div>
@@ -1254,7 +1255,6 @@ function responder(opcionSeleccionada) {
   state.racha++;
   state.animState = "eureka";
 
-  // Economía balanceada
   let baseCoins = 2;
   let baseXP = 8;
 
